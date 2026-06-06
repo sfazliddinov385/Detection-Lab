@@ -93,20 +93,24 @@ For the decision-making side, see [investigations/INV-rdp-bruteforce-chain.md](i
 ## What's in this repo
 
 ```
-detection-lab/
+Detection-Lab/
 ├── README.md                  this file
-├── mapping-table.md           the master table: attack to framework to detection
-├── lab-setup/
-│   ├── architecture.md        machine specs, network, install order
-│   └── sysmon-config-notes.md
+├── mapping-table.md           master table: attack to framework to detection
+├── investigations.md          full triage walkthrough of the whole attack chain
 ├── detections/
 │   ├── T1110-bruteforce.md
 │   ├── T1059-powershell.md
 │   ├── T1547-persistence.md
 │   └── T1071-c2.md
-├── investigations/            full triage walkthrough of the attack chain
-├── sigma-rules/               portable .yml rules
-├── diagrams/                  Kill Chain diagram, ATT&CK Navigator layer
+├── lab-setup/
+│   ├── architecture.md        machine specs, network, topology diagram
+│   └── sysmon-config-notes.md
+├── sigma-rules/               portable .yml detection rules
+│   ├── T1110-bruteforce.yml
+│   ├── T1059-powershell.yml
+│   ├── T1547-persistence.yml
+│   └── T1071-c2.yml
+├── diagrams/                  ATT&CK Navigator layer + Kill Chain diagram
 └── screenshots/               evidence for each attack
 ```
 
