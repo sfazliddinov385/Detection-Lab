@@ -118,10 +118,6 @@ Everything ran on my own machines, on a closed network with no internet. No real
 
 ---
 
-## About me
+## Author
 
-**Beck (Sarvarbek)**, aspiring SOC Analyst
-CompTIA Security+, A+, AWS Cloud Practitioner. Studying CySA+.
-GitHub: [@sfazliddinov385](https://github.com/sfazliddinov385)
-
-For learning purposes only.
+**Beck (Sarvarbek)**
