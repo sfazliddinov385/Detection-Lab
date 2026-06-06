@@ -28,11 +28,25 @@ Three VMs on a closed network with no internet during testing.
 | **Attacker** | Runs the attacks. Also acts as the C2 server. | Kali Linux | Hydra, Atomic Red Team, Python |
 | **Defender** | Collects the logs. Where I do the detection work. | Ubuntu | Splunk Enterprise |
 
-```
-[ Kali Attacker ] --attacks--> [ Windows Victim ] --Sysmon + Security logs-->
-     (also C2 server)                |
-                                     +--Universal Forwarder :9997--> [ Splunk (Ubuntu) ]
-                                                                        (hunt + detect)
+```mermaid
+flowchart LR
+    subgraph LAB["Closed host-only network (192.168.226.0/24)"]
+        direction LR
+        Kali["<b>Kali - Attacker</b><br/>192.168.226.130<br/>Hydra, Atomic Red Team, C2"]
+        Victim["<b>Windows 11 - Victim</b><br/>192.168.226.128<br/>Sysmon + Security logs"]
+        Splunk["<b>Ubuntu - Defender</b><br/>192.168.226.129<br/>Splunk Enterprise (SIEM)"]
+    end
+
+    Kali ==>|"attacks"| Victim
+    Victim ==>|"logs via forwarder :9997"| Splunk
+    Victim -.->|"C2 beacon"| Kali
+
+    classDef attacker fill:#fdecea,stroke:#c0392b,color:#111;
+    classDef victim fill:#fef9e7,stroke:#b7950b,color:#111;
+    classDef defender fill:#eafaf1,stroke:#1e8449,color:#111;
+    class Kali attacker;
+    class Victim victim;
+    class Splunk defender;
 ```
 
 Full machine specs, IPs, and how the network is locked down are in [lab-setup/architecture.md](lab-setup/architecture.md).
