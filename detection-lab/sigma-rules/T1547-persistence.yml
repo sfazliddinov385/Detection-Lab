@@ -1,0 +1,38 @@
+title: Registry Run Key / Startup Persistence
+id: 6b2e90fd-7a11-4c5d-8e0a-1547persisten1
+status: experimental
+description: Detects creation or modification of autostart Registry Run keys used
+  by adversaries to maintain persistence across reboots and logons.
+references:
+  - https://attack.mitre.org/techniques/T1547/001/
+author: detection-lab
+date: 2026/06/05
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1547.001
+logsource:
+  category: registry_set
+  product: windows
+detection:
+  selection:
+    TargetObject|contains:
+      - '\CurrentVersion\Run\'
+      - '\CurrentVersion\RunOnce\'
+      - '\CurrentVersion\Policies\Explorer\Run\'
+      - '\CurrentVersion\RunServices\'
+  filter_known:
+    Details|startswith:
+      - 'C:\Program Files\'
+      - 'C:\Program Files (x86)\'
+      - 'C:\Windows\system32\'
+  condition: selection and not filter_known
+fields:
+  - TargetObject
+  - Details
+  - Image
+  - User
+falsepositives:
+  - Legitimate software installers adding autostart entries
+  - Vendor agents (EDR, backup, VPN clients)
+level: medium

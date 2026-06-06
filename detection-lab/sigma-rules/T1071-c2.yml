@@ -1,0 +1,28 @@
+title: Possible C2 Beaconing - Low-Jitter Periodic Connections
+id: 8c4f2a17-9d63-4b85-a1e0-c2beacon1071
+status: experimental
+description: Detects a process making many network connections to one destination at
+  an almost constant interval (low jitter), which indicates automated command-and-control
+  beaconing. Best implemented as a scheduled search.
+references:
+  - https://attack.mitre.org/techniques/T1071/
+author: Beck
+logsource:
+  product: windows
+  category: network_connection
+detection:
+  selection:
+    EventID: 3
+  # The count plus low timing jitter per source and destination is evaluated in
+  # the scheduled SIEM search. See the SPL in detections/T1071-c2.md.
+  condition: selection
+fields:
+  - Image
+  - DestinationIp
+  - DestinationPort
+falsepositives:
+  - Software update checks, telemetry, and monitoring agents (allow-list known destinations)
+level: medium
+tags:
+  - attack.command_and_control
+  - attack.t1071

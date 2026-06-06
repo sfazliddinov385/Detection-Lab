@@ -1,0 +1,31 @@
+title: Windows Account Brute Force - Multiple Failed Logons
+id: 8a9f0c21-1b3e-4d6a-9c2f-1110bruteforc1
+status: experimental
+description: Detects multiple failed logon attempts (Event ID 4625) from a single
+  source against one or more accounts in a short time window, indicating password
+  guessing or brute force.
+references:
+  - https://attack.mitre.org/techniques/T1110/
+author: detection-lab
+date: 2026/06/05
+tags:
+  - attack.credential_access
+  - attack.t1110
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4625
+  timeframe: 5m
+  condition: selection | count() by IpAddress > 10
+fields:
+  - IpAddress
+  - TargetUserName
+  - WorkstationName
+  - LogonType
+falsepositives:
+  - Users repeatedly typing wrong passwords
+  - Service accounts with stale cached credentials
+  - Vulnerability scanners and authentication test tooling
+level: medium
