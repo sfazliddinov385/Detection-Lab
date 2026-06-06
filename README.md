@@ -95,7 +95,7 @@ For the decision-making side, see [investigations/INV-rdp-bruteforce-chain.md](i
 ```
 Detection-Lab/
 ├── README.md                  this file
-├── mapping-table.md           master table: attack to framework to detection
+├── mapping-table.md           attack to framework to detection
 ├── investigations.md          full triage walkthrough of the whole attack chain
 ├── detections/
 │   ├── T1110-bruteforce.md
@@ -118,7 +118,7 @@ Detection-Lab/
 
 ## Safety
 
-Everything ran on my own machines, on a closed network with no internet. No real malware. The attacks were faked with Hydra and Atomic Red Team. I turned off Windows Defender on the victim, in the lab only, so it would not block the test. In a real setup you would tune exclusions instead of turning off antivirus.
+Everything ran on virtual machines, on a closed network with no internet. No real malware. The attacks were faked with Hydra and Atomic Red Team. I turned off Windows Defender on the victim, in the lab only, so it would not block the test. In a real setup you would tune exclusions instead of turning off antivirus.
 
 ---
 
