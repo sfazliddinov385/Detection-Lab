@@ -6,13 +6,13 @@
 ![Kali](https://img.shields.io/badge/attacker-Kali%20Linux-purple.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
-I built a small lab where I run real attacks against my own machines and then catch them in Splunk. For each attack I write a detection, document it, and map it to the two frameworks SOC teams use: the Cyber Kill Chain and MITRE ATT&CK.
+I built a small lab where I run simulated attacks against my own machines and then catch them in Splunk. For each attack, I write a detection, document it, and map it to two common cybersecurity frameworks: the Cyber Kill Chain and MITRE ATT&CK.
 
-This is the whole job of a SOC analyst, start to finish. Make the attack happen, find it in the logs, write something that catches it, and explain it. Every attack runs on my own VMs, on a closed network, using known tools (Hydra, Atomic Red Team). No real malware.
+This project helped me practice the basics of detection engineering: creating suspicious activity in a safe lab, collecting logs, writing searches, and explaining what I found. Every attack runs on my own VMs, on a closed network, using known tools like Hydra and Atomic Red Team. No real malware was used.
 
 **Quick version:**
-- 3 machines: a Windows victim, a Kali attacker, an Ubuntu box running Splunk
-- 4 attacks, 4 log sources, 4 different ways to detect
+- 3 machines: a Windows victim, a Kali attacker, and an Ubuntu box running Splunk
+- 4 attacks, 4 log sources, and 4 different ways to detect
 - Covers the full attack: getting in, running code, staying, and phoning home
 - Each one has a Splunk search and a portable Sigma rule
 
@@ -68,40 +68,58 @@ Four attacks, four log sources, four different detection styles. Put together, t
 
 Full table: [mapping-table.md](mapping-table.md)
 
-For the decision-making side, see [investigations/INV-rdp-bruteforce-chain.md](investigations/INV-rdp-bruteforce-chain.md), where I work the whole chain as a live alert and show every call I made.
+For the decision-making side, see [investigations/INV-rdp-bruteforce-chain.md](investigations/INV-rdp-bruteforce-chain.md), where I work through the full chain and explain the choices I made.
 
 ---
 
 ## What each one catches
 
-- **T1110 (volume):** flags a spike of failed logins. I use the `4625` sub-status code to tell password guessing apart from someone just guessing usernames.
-- **T1059.001 (pattern):** finds hidden (base64) PowerShell, including the short `-E` form that a basic search for `-EncodedCommand` would miss. It also flags PowerShell started by WMI.
-- **T1547.001 (registry):** catches programs that set themselves to run at login, and flags the ones with suspicious file paths to cut down on installer noise.
-- **T1071 (behavior):** catches a beacon by how evenly it connects, not by a known-bad address. So it works even on a server we have never seen before.
+- **T1110 Brute Force:** flags a spike of failed logins. I use the `4625` sub-status code to tell password guessing apart from someone just guessing usernames.
+- **T1059.001 PowerShell:** finds hidden base64 PowerShell, including the short `-E` form that a basic search for `-EncodedCommand` would miss. It also flags PowerShell started by WMI.
+- **T1547.001 Registry Run Key:** catches programs that set themselves to run at login, and flags the ones with suspicious file paths to cut down on installer noise.
+- **T1071 C2 Beaconing:** catches a beacon by how evenly it connects, not by a known-bad address. This helps detect suspicious traffic even when the server has not been seen before.
+
+---
+
+## Skills shown
+
+- Splunk search writing and log analysis
+- Windows Security Event Log investigation
+- Sysmon event analysis
+- MITRE ATT&CK mapping
+- Cyber Kill Chain mapping
+- Sigma rule writing
+- Brute-force, PowerShell, persistence, and C2 detection
+- Basic investigation and alert review
+- Basic attacker behavior simulation in a safe lab
 
 ---
 
 ## Tools and frameworks
 
 **SIEM and logging:** Splunk Enterprise, Splunk Universal Forwarder, Sysmon (SwiftOnSecurity config)
+
 **Attack tools:** Hydra, Atomic Red Team
+
 **Frameworks:** MITRE ATT&CK, Cyber Kill Chain
+
 **Output:** Splunk searches and portable Sigma rules
 
 ---
 
 ## What's in this repo
 
-```
+```text
 Detection-Lab/
 ├── README.md                  this file
 ├── mapping-table.md           attack to framework to detection
-├── investigations.md          full triage walkthrough of the whole attack chain
 ├── detections/
 │   ├── T1110-bruteforce.md
 │   ├── T1059-powershell.md
 │   ├── T1547-persistence.md
 │   └── T1071-c2.md
+├── investigations/
+│   └── INV-rdp-bruteforce-chain.md
 ├── lab-setup/
 │   ├── architecture.md        machine specs, network, topology diagram
 │   └── sysmon-config-notes.md
@@ -118,7 +136,9 @@ Detection-Lab/
 
 ## Safety
 
-Everything ran on virtual machines, on a closed network with no internet. No real malware. The attacks were faked with Hydra and Atomic Red Team. I turned off Windows Defender on the victim, in the lab only, so it would not block the test. In a real setup you would tune exclusions instead of turning off antivirus.
+Everything ran on virtual machines, on a closed network with no internet during testing. All activity was performed in a private lab using simulated attacks and controlled tools. No real malware was used.
+
+I turned off Windows Defender on the victim in the lab only so it would not block the test. In a real setup, you would tune exclusions instead of turning off antivirus.
 
 ---
 
